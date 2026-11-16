@@ -31,3 +31,15 @@ Add this repository as a custom repository in HACS / the Marketplace with
 category **theme**, then download it. The Marketplace reloads themes after
 installing. Then set a dashboard's theme to **weather-season** (Dashboard
 settings → Theme), or set it as your profile theme.
+
+## Also in this repo: Seasonal Glass (English fork)
+
+This repo also holds an English fork of
+[Seasonal Glass](https://github.com/pietroguidetti02/ha-seasonal-glass)
+(v0.2.1 → 0.2.2): the HACS integration that decorates every dashboard per
+season and holiday. See [SEASONAL-GLASS.md](SEASONAL-GLASS.md).
+
+Install it by hand — copy `custom_components/seasonal_glass/` into your Home
+Assistant `/config/custom_components/` (replacing the upstream files) and
+restart. This repo is registered in HACS as the Weather Season theme, so HACS
+cannot install the integration from it.

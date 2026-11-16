@@ -1,0 +1,15 @@
+preview:
+  fields:
+    period:
+      required: true
+      example: natale
+      selector:
+        text:
+    minutes:
+      default: 10
+      selector:
+        number:
+          min: 0
+          max: 1440
+          unit_of_measurement: min
+          mode: box

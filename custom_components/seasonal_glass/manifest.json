@@ -1,0 +1,18 @@
+{
+  "domain": "seasonal_glass",
+  "name": "Seasonal Glass",
+  "codeowners": [
+    "@vietde"
+  ],
+  "config_flow": true,
+  "dependencies": [
+    "http",
+    "frontend"
+  ],
+  "documentation": "https://github.com/vietde/ha-weather-seasonal-theme",
+  "integration_type": "service",
+  "iot_class": "calculated",
+  "issue_tracker": "https://github.com/vietde/ha-weather-seasonal-theme/issues",
+  "single_config_entry": true,
+  "version": "0.2.2"
+}
