@@ -1,0 +1,1 @@
+# ha-weather-seasonal-theme
