@@ -32,6 +32,42 @@ category **theme**, then download it. The Marketplace reloads themes after
 installing. Then set a dashboard's theme to **weather-season** (Dashboard
 settings → Theme), or set it as your profile theme.
 
+## Day/night modes (v0.3.0)
+
+The theme has two looks: the base variables are the night (dark) look and
+`modes.light` is the day (bright) look. The sky templates already follow the
+sun themselves (night starts at sun elevation −2°). Pair it with the
+day/night automation from the
+[Seasonal Glass README](https://github.com/pietroguidetti02/ha-seasonal-glass#daynight-the-automation-that-pairs-with-it)
+— adapted to this theme, it calls `frontend.set_theme` with mode `light` at
+sunrise and `dark` at sunset:
+
+```yaml
+automation:
+  - alias: "Dashboard theme follows the sun"
+    mode: single
+    triggers:
+      - trigger: numeric_state
+        entity_id: sun.sun
+        attribute: elevation
+        below: -2
+      - trigger: numeric_state
+        entity_id: sun.sun
+        attribute: elevation
+        above: -2
+      - trigger: homeassistant
+        event: start
+    actions:
+      - action: frontend.set_theme
+        data:
+          mode: >
+            {% if state_attr('sun.sun', 'elevation') | float(0) > -2 %}light{% else %}dark{% endif %}
+```
+
+The Homeview button-card templates read their colors from the theme's
+`--neo-*` variables, so the cards go bright in the day and dark at night
+along with everything else.
+
 ## Also in this repo: Seasonal Glass (English fork)
 
 This repo also holds an English fork of

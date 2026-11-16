@@ -20,6 +20,17 @@
 # v0.2.0: more theme coverage - accent/text/sidebar/switch variables
 # (Seasonal Glass overrides the accents per period when it is active),
 # plus a card-mod-root fallback sky behind the whole app shell.
+#
+# v0.3.0: day/night modes. The base variables below are the NIGHT (dark)
+# look; modes.light holds the DAY (bright) look. The "Dashboard theme
+# follows the sun" automation (see the Seasonal Glass README's day/night
+# section) calls frontend.set_theme with mode light/dark at sun elevation
+# -2 degrees, so the dashboard goes bright at sunrise and dark at sunset.
+# The sky templates already follow the sun themselves; "night" now means
+# elevation below -2 to match the automation exactly.
+# The --neo-* variables feed the Homeview button-card templates: the
+# templates use var(--neo-*, <dark fallback>), so they follow the mode
+# and keep the dark look if the theme ever isn't active.
 weather-season:
   card-mod-theme: weather-season
 
@@ -60,11 +71,87 @@ weather-season:
   switch-checked-color: "#00e5ff"
   switch-checked-track-color: "rgba(0, 229, 255, 0.35)"
 
+  # Neon card variables (night values; see modes.light for the day look).
+  # Used by the Homeview button-card templates via var(--neo-*, <fallback>).
+  --neo-bg: "linear-gradient(145deg, rgba(14,24,44,0.62), rgba(7,11,22,0.66))"
+  --neo-bg-off: "linear-gradient(145deg, rgba(10,16,28,0.62), rgba(5,8,16,0.66))"
+  --neo-bg-away: "linear-gradient(145deg, #05070c, #020306)"
+  --neo-border: "1px solid rgba(0,229,255,0.16)"
+  --neo-border-off: "1px solid rgba(60,75,90,0.30)"
+  --neo-shadow: "0 10px 30px rgba(0,0,0,0.45), inset 0 0 0 1px rgba(255,255,255,0.03)"
+  --neo-shadow-off: "inset 0 0 24px rgba(0,0,0,0.85)"
+  --neo-text: "#e6f7ff"
+  --neo-text-dim: "rgba(160,200,230,0.75)"
+  --neo-text-faint: "#66788c"
+  --neo-text-faint2: "#44566a"
+  --neo-text-faint3: "#4d5f73"
+  --neo-accent: "#00e5ff"
+  --neo-accent-glow: "0 0 10px rgba(0,229,255,0.8)"
+  --neo-chip-off: "rgba(50,65,80,0.14)"
+  --neo-chip-off2: "rgba(50,65,80,0.20)"
+  --neo-img-bg: "rgba(0,229,255,0.08)"
+  --neo-temp-off: "#7ff3ff"
+  --neo-temp-grad: "linear-gradient(90deg,#00e5ff,#7c4dff,#ff2bd6)"
+  --neo-cond: "#bff8ff"
+  --neo-stats: "#8fb4d0"
+  --neo-greet: "linear-gradient(90deg,#ffffff,#9ff3ff)"
+  --neo-greet-sub: "rgba(200,230,250,0.9)"
+
+  # Day look: bright surfaces, dark text, deeper cyan accents.
+  modes:
+    light:
+      ha-card-background: "rgba(255,255,255,0.66)"
+      ha-card-border-color: "rgba(0,144,184,0.28)"
+      ha-card-box-shadow: "0 10px 30px rgba(30,60,90,0.18)"
+      app-header-background-color: "rgba(255,255,255,0.78)"
+      app-header-text-color: "#1a2c3d"
+      primary-background-color: "#dbe7f0"
+      lovelace-background: "#dbe7f0"
+      primary-color: "#0090b8"
+      accent-color: "#0088a8"
+      mdc-theme-primary: "#0090b8"
+      primary-text-color: "#1a2c3d"
+      secondary-text-color: "#4a6578"
+      disabled-text-color: "#8a9aa8"
+      secondary-background-color: "#eef4f8"
+      divider-color: "rgba(0,144,184,0.20)"
+      sidebar-background-color: "rgba(255,255,255,0.85)"
+      sidebar-text-color: "#33505f"
+      sidebar-icon-color: "#6b8296"
+      sidebar-selected-background-color: "rgba(0,144,184,0.14)"
+      sidebar-selected-text-color: "#0090b8"
+      sidebar-selected-icon-color: "#0090b8"
+      switch-checked-color: "#0090b8"
+      switch-checked-track-color: "rgba(0,144,184,0.35)"
+      --neo-bg: "linear-gradient(145deg, rgba(255,255,255,0.74), rgba(228,238,246,0.80))"
+      --neo-bg-off: "linear-gradient(145deg, rgba(255,255,255,0.68), rgba(220,232,240,0.76))"
+      --neo-bg-away: "linear-gradient(145deg, rgba(245,248,250,0.85), rgba(230,238,244,0.90))"
+      --neo-border: "1px solid rgba(0,144,184,0.30)"
+      --neo-border-off: "1px solid rgba(130,150,168,0.40)"
+      --neo-shadow: "0 10px 30px rgba(30,60,90,0.16), inset 0 0 0 1px rgba(255,255,255,0.6)"
+      --neo-shadow-off: "inset 0 0 24px rgba(60,90,120,0.10)"
+      --neo-text: "#1a2c3d"
+      --neo-text-dim: "rgba(45,80,110,0.78)"
+      --neo-text-faint: "#7d8fa0"
+      --neo-text-faint2: "#93a5b5"
+      --neo-text-faint3: "#6b7f92"
+      --neo-accent: "#0090b8"
+      --neo-accent-glow: "0 0 10px rgba(0,144,184,0.45)"
+      --neo-chip-off: "rgba(140,160,180,0.22)"
+      --neo-chip-off2: "rgba(140,160,180,0.28)"
+      --neo-img-bg: "rgba(0,144,184,0.10)"
+      --neo-temp-off: "#007a99"
+      --neo-temp-grad: "linear-gradient(90deg,#0090b8,#5a3fd4,#c4008f)"
+      --neo-cond: "#007a99"
+      --neo-stats: "#4a6a80"
+      --neo-greet: "linear-gradient(90deg,#005a75,#0088a8)"
+      --neo-greet-sub: "rgba(30,70,100,0.85)"
+
   card-mod-view: |
     {% set w = states('weather.forecast_home') %}
     {% set month = now().month %}
     {% set season = 'winter' if month in [12, 1, 2] else 'spring' if month in [3, 4, 5] else 'summer' if month in [6, 7, 8] else 'autumn' %}
-    {% set night = is_state('sun.sun', 'below_horizon') %}
+    {% set night = state_attr('sun.sun', 'elevation') | float(0) < -2 %}
     {% if w in ['sunny', 'partlycloudy'] %}
       {% if season == 'spring' %}
         {% set sky = 'linear-gradient(180deg, #79b8e8 0%, #a8d4f0 42%, #d9ecdf 78%, #f2ecd2 100%)' %}
@@ -188,7 +275,7 @@ weather-season:
     {% set w = states('weather.forecast_home') %}
     {% set month = now().month %}
     {% set season = 'winter' if month in [12, 1, 2] else 'spring' if month in [3, 4, 5] else 'summer' if month in [6, 7, 8] else 'autumn' %}
-    {% set night = is_state('sun.sun', 'below_horizon') %}
+    {% set night = state_attr('sun.sun', 'elevation') | float(0) < -2 %}
     {% if w in ['sunny', 'partlycloudy'] %}
       {% if season == 'spring' %}
         {% set sky = 'linear-gradient(180deg, #79b8e8 0%, #a8d4f0 42%, #d9ecdf 78%, #f2ecd2 100%)' %}
