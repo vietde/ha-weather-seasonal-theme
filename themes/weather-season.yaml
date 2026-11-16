@@ -16,6 +16,10 @@
 # - Thunderstorms add a soft lightning flash.
 # - Cards go glassy (translucent + blur) so the sky shows through.
 # Pure CSS - no image downloads, nothing to host.
+#
+# v0.2.0: more theme coverage - accent/text/sidebar/switch variables
+# (Seasonal Glass overrides the accents per period when it is active),
+# plus a card-mod-root fallback sky behind the whole app shell.
 weather-season:
   card-mod-theme: weather-season
 
@@ -29,6 +33,32 @@ weather-season:
   app-header-text-color: "#e6f7ff"
   primary-background-color: "#070b16"
   lovelace-background: "#070b16"
+
+  # Accent fallbacks (Seasonal Glass overrides these per period when active)
+  primary-color: "#00e5ff"
+  accent-color: "#00b8d4"
+  mdc-theme-primary: "#00e5ff"
+
+  # Text
+  primary-text-color: "#e6f7ff"
+  secondary-text-color: "#9db4c8"
+  disabled-text-color: "#5a6d80"
+
+  # Surfaces
+  secondary-background-color: "#0d1626"
+  divider-color: "rgba(0, 229, 255, 0.12)"
+
+  # Sidebar
+  sidebar-background-color: "rgba(7, 11, 22, 0.88)"
+  sidebar-text-color: "#c8dcea"
+  sidebar-icon-color: "#7a93a8"
+  sidebar-selected-background-color: "rgba(0, 229, 255, 0.14)"
+  sidebar-selected-text-color: "#00e5ff"
+  sidebar-selected-icon-color: "#00e5ff"
+
+  # Controls
+  switch-checked-color: "#00e5ff"
+  switch-checked-track-color: "rgba(0, 229, 255, 0.35)"
 
   card-mod-view: |
     {% set w = states('weather.forecast_home') %}
@@ -149,4 +179,43 @@ weather-season:
     }
     @media (prefers-reduced-motion: reduce) {
       hui-sections-view::after, hui-sections-view::before { animation: none !important; }
+    }
+
+  # Fallback sky on the app shell itself (hui-root), behind the view.
+  # Same weather/season/night sky as the view, no particles - it only
+  # shows where the view leaves the shell visible.
+  card-mod-root: |
+    {% set w = states('weather.forecast_home') %}
+    {% set month = now().month %}
+    {% set season = 'winter' if month in [12, 1, 2] else 'spring' if month in [3, 4, 5] else 'summer' if month in [6, 7, 8] else 'autumn' %}
+    {% set night = is_state('sun.sun', 'below_horizon') %}
+    {% if w in ['sunny', 'partlycloudy'] %}
+      {% if season == 'spring' %}
+        {% set sky = 'linear-gradient(180deg, #79b8e8 0%, #a8d4f0 42%, #d9ecdf 78%, #f2ecd2 100%)' %}
+      {% elif season == 'summer' %}
+        {% set sky = 'linear-gradient(180deg, #4f9fe0 0%, #7fc0ee 45%, #cfe8f7 75%, #ffedb0 100%)' %}
+      {% elif season == 'autumn' %}
+        {% set sky = 'linear-gradient(180deg, #6fa8d8 0%, #a8c4de 40%, #e8b877 78%, #f5d49a 100%)' %}
+      {% else %}
+        {% set sky = 'linear-gradient(180deg, #9dbfd9 0%, #c3d8e8 45%, #e6eef4 78%, #f7fafc 100%)' %}
+      {% endif %}
+    {% elif w in ['cloudy', 'windy', 'windy-variant'] %}
+      {% set sky = 'linear-gradient(180deg, #5d7186 0%, #7d93a8 50%, #a9b8c6 100%)' %}
+    {% elif w in ['rainy', 'pouring', 'hail', 'exceptional'] %}
+      {% set sky = 'linear-gradient(180deg, #2b394d 0%, #3f5470 55%, #5a7186 100%)' %}
+    {% elif w in ['lightning', 'lightning-rainy'] %}
+      {% set sky = 'linear-gradient(180deg, #1f2637 0%, #333d57 55%, #4c5a76 100%)' %}
+    {% elif w in ['snowy', 'snowy-rainy'] %}
+      {% set sky = 'linear-gradient(180deg, #aebfcd 0%, #cfd9e0 50%, #eef2f4 100%)' %}
+    {% elif w == 'fog' %}
+      {% set sky = 'linear-gradient(180deg, #8b979e 0%, #aab4ba 55%, #c9cfd2 100%)' %}
+    {% elif w == 'clear-night' %}
+      {% set sky = 'linear-gradient(180deg, #04081a 0%, #0b142e 55%, #1a2a52 100%)' %}
+    {% else %}
+      {% set sky = 'linear-gradient(180deg, #5d7186 0%, #7d93a8 50%, #a9b8c6 100%)' %}
+    {% endif %}
+    :host {
+      background-image: {% if night %}linear-gradient(rgba(3, 6, 18, 0.5), rgba(3, 6, 18, 0.5)), {% endif %}{{ sky }};
+      background-attachment: fixed;
+      background-repeat: no-repeat;
     }
