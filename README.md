@@ -36,37 +36,28 @@ settings → Theme), or set it as your profile theme.
 
 The theme has two looks: the base variables are the night (dark) look and
 `modes.light` is the day (bright) look. The sky templates already follow the
-sun themselves (night starts at sun elevation −2°). Pair it with the
-day/night automation from the
-[Seasonal Glass README](https://github.com/pietroguidetti02/ha-seasonal-glass#daynight-the-automation-that-pairs-with-it)
-— adapted to this theme, it calls `frontend.set_theme` with mode `light` at
-sunrise and `dark` at sunset:
+sun themselves (night starts at sun elevation −2°). The button-card templates
+read their colors from the theme's `--neo-*` variables, so the cards go
+bright in the day and dark at night along with everything else.
 
-```yaml
-automation:
-  - alias: "Dashboard theme follows the sun"
-    mode: single
-    triggers:
-      - trigger: numeric_state
-        entity_id: sun.sun
-        attribute: elevation
-        below: -2
-      - trigger: numeric_state
-        entity_id: sun.sun
-        attribute: elevation
-        above: -2
-      - trigger: homeassistant
-        event: start
-    actions:
-      - action: frontend.set_theme
-        data:
-          mode: >
-            {% if state_attr('sun.sun', 'elevation') | float(0) > -2 %}light{% else %}dark{% endif %}
-```
+Which look shows is decided by the frontend's light/dark **mode** — a
+per-device setting in your profile (Profile → Theme → Light / Dark / Auto),
+not something an automation can flip. In Home Assistant 2026.11,
+`frontend.set_theme` only sets the *default theme names* for light and dark
+mode; it cannot switch the mode itself (verified against the 2026.11.0
+source: `homeassistant/components/frontend/services.py` — the service has no
+mode-switching path, and the Seasonal Glass README's day/night automation
+only re-points the light default theme). So the day/night setup is:
 
-The Homeview button-card templates read their colors from the theme's
-`--neo-*` variables, so the cards go bright in the day and dark at night
-along with everything else.
+1. Set your profile theme mode to **Auto** (HA app or web → your profile →
+   Theme → Auto).
+2. Set your phone to switch appearance automatically (iOS: Settings →
+   Display & Brightness → Automatic, Sunset to Sunrise).
+
+The phone then flips light at sunrise and dark at sunset, Home Assistant
+follows, and this theme renders its day or night look — with Seasonal Glass
+decorations following the same switch. To preview the daytime look at night,
+temporarily set the profile theme mode to Light, then back to Auto.
 
 ## Also in this repo: Seasonal Glass (English fork)
 
